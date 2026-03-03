@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app import schemas
-from app.services.smart_assist import generate_suggestions
+from app.services.smart_assist_service import generate_suggestions
 import logging
 
 router = APIRouter(prefix="/smart-assist", tags=["Smart Assist"])
