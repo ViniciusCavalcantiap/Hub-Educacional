@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine
 from app import models
-from app.routers import resources, smart_assist, health
+from app.routers import resources, health, smart_assist_router
 import logging
 
 models.Base.metadata.create_all(bind=engine)
@@ -20,5 +20,5 @@ app.add_middleware(
 )
 
 app.include_router(resources.router)
-app.include_router(smart_assist.router)
+app.include_router(smart_assist_router.router)
 app.include_router(health.router)
