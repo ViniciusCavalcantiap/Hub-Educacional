@@ -1,18 +1,20 @@
 # 📚 Hub Educacional
 
-Plataforma para gerenciamento de materiais educacionais com geração automática de descrições e tags utilizando Inteligência Artificial.
+Plataforma de gerenciamento de materiais educacionais com geração automática de descrições e tags via Inteligência Artificial.
 
-A aplicação é totalmente containerizada e executada via Docker Compose, garantindo consistência entre ambientes e persistência de dados.
+A aplicação é totalmente containerizada com Docker Compose, garantindo consistência entre ambientes e persistência de dados.
 
-# 🖥️ Arquitetura do Frontend
+---
 
-Estrutura baseada em separação clara de responsabilidades:
+## 🗂️ Estrutura do Projeto
+
+### Frontend
 
 ```
 frontend/
 └── src/
     ├── assets/
-    ├── components/
+    ├── components/         # Componentes de UI isolados
     │   ├── Button.jsx
     │   ├── Card.jsx
     │   ├── ConfirmDeleteModal.jsx
@@ -24,119 +26,83 @@ frontend/
     │   ├── ResourceFormModal.jsx
     │   ├── ResourceList.jsx
     │   └── ResourceToolbar.jsx
-    │
-    ├── hooks/
+    ├── hooks/              # Lógica reutilizável via Custom Hooks
     │   ├── useFeedback.js
     │   ├── useModal.js
     │   ├── usePagination.js
     │   └── useResources.js
-    │
-    ├── services/
+    ├── services/           # Chamadas HTTP centralizadas
     │   ├── api.js
     │   └── resourceService.js
-    │
     ├── App.jsx
     ├── main.jsx
     └── index.css
 ```
 
-## Padrões Utilizados
+**Stack:** JavaScript · React · Tailwind CSS
 
-* **Componentização isolada** (UI desacoplada)
-* **Custom Hooks** para lógica reutilizável
-* **Camada de Services** para centralização de chamadas HTTP
-* Separação clara entre estado, interface e comunicação com API
+**Padrões adotados:**
+- Componentização isolada (UI desacoplada)
+- Custom Hooks para lógica reutilizável
+- Camada de Services para centralização das chamadas à API
+- Separação clara entre estado, interface e comunicação com o backend
 
----
-
-# ⚙️ Arquitetetura do Backend
+### Backend
 
 ```
 backend/
 ├── app/
-│   ├── routers/
-│   ├── services/
-│   ├── __init__.py
-│   ├── database.py
-│   ├── main.py
-│   ├── models.py
-│   └── schemas.py
-│
+│   ├── routers/            # Endpoints REST
+│   ├── services/           # Regras de negócio
+│   ├── database.py         # Configuração e sessão do banco
+│   ├── models.py           # Estrutura do banco de dados
+│   ├── schemas.py          # Contratos da API
+│   └── main.py
 ├── data/
-│
 ├── tests/
 │   ├── conftest.py
 │   ├── test_resource.py
 │   └── test_smart_assist.py
-│
-├── .dockerignore
-├── .env
-├── .flake8
-├── database.db
 ├── Dockerfile
 ├── requirements.txt
-└── test.db
+└── .env
 ```
 
-## Arquitetura modular seguindo boas práticas:
+**Stack:** Python · FastAPI · SQLite · SQLAlchemy
 
-* models → estrutura do banco
-* schemas → contratos da API
-* routes → endpoints REST
-* database → configuração e sessão
-
-Banco utilizado: SQLite via SQLAlchemy.
-
-Persistência garantida via volume Docker.
 
 ---
 
-# 🐳 Como Rodar o Projeto
+## 🐳 Como Rodar
 
-Na raiz do projeto:
+Na raiz do projeto, execute:
 
 ```bash
 docker compose up --build
 ```
 
-Isso irá:
+Isso irá buildar e subir o backend e o frontend, além de criar o volume para persistência do banco de dados.
 
-* Buildar o backend
-* Buildar o frontend
-* Criar volume para persistência do banco
-* Subir os containers
+### Acessos
 
----
-
-## 🔗 Acessos
-
-Backend (Swagger UI):
-
-```
-http://localhost:8000/docs
-```
-
-Frontend:
-
-```
-http://localhost:3000
-```
+| Serviço | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| Backend (Swagger UI) | http://localhost:8000/docs |
 
 ---
 
-# 🔐 Configuração de Variáveis de Ambiente
+## 🔐 Variáveis de Ambiente
 
-O projeto utiliza DOIS arquivos `.env` distintos.
+O projeto usa **dois arquivos `.env`** distintos. Nenhum deles deve ser versionado no Git.
 
----
+### 1. `.env` da raiz — chave da IA
 
-## 1️⃣ .env da Raiz (Chave da IA)
-
-Crie um arquivo `.env` na RAIZ do projeto (mesmo nível do docker-compose.yml):
+Crie o arquivo na raiz do projeto, no mesmo nível do `docker-compose.yml`:
 
 ```
 Hub-educacional/
-├── .env   ← AQUI
+├── .env              ← AQUI
 ├── backend/
 ├── frontend/
 └── docker-compose.yml
@@ -144,71 +110,45 @@ Hub-educacional/
 
 Conteúdo:
 
-```
+```env
 GEMINI_API_KEY=sua_chave_aqui
 ```
 
-Essa variável será injetada no container do backend via Docker Compose.
+Essa variável é injetada automaticamente no container do backend via Docker Compose.
 
-⚠️ Nunca suba esse arquivo para o GitHub.
+### 2. `frontend/.env` — URL da API
 
----
+Crie o arquivo dentro da pasta `frontend/`:
 
-## 2️⃣ .env do Frontend
-
-Dentro da pasta frontend, crie outro `.env`:
-
-```
-frontend/
-└── .env   ← AQUI
-```
-
-Exemplo de conteúdo:
-
-```
+```env
 VITE_API_URL=http://localhost:8000
 ```
 
-Essa variável define a URL base da API consumida pelo frontend.
-
-No ambiente Docker, o frontend se comunica corretamente com o backend via serviço interno definido no docker-compose.
+Define a URL base da API consumida pelo frontend. No ambiente Docker, a comunicação entre os serviços já está configurada no `docker-compose.yml`.
 
 ---
 
-# 🗄 Persistência de Dados
+## 🗄️ Persistência de Dados
 
-O banco SQLite é salvo em:
-
-```
-backend/data/database.db
-```
-
-Como há volume Docker configurado:
-
-* Reiniciar container NÃO apaga os dados
-* Os materiais permanecem salvos
+O banco SQLite fica salvo em `backend/data/database.db`. Como há um volume Docker configurado, **reiniciar o container não apaga os dados**.
 
 ---
 
-# 🧪 Testes Automatizados
+## 🧪 Testes
 
-Para rodar os testes dentro do backend:
+Execute os testes dentro do container do backend:
 
 ```bash
 docker compose exec backend pytest
 ```
 
-Saída esperada:
-
-```
-5 passed
-```
+Saída esperada: **5 passed**
 
 ---
 
-# 🎨 Padronização de Código
+## 🎨 Qualidade de Código
 
-Verificação com Black:
+Verificação de formatação com Black:
 
 ```bash
 docker compose exec backend black --check .
@@ -216,10 +156,9 @@ docker compose exec backend black --check .
 
 ---
 
-# 📈 Diferenciais Técnicos
+## ✨ Destaques Técnicos
 
-* Arquitetura modular backend e frontend
-* Separação clara de camadas
-* Integração com LLM
-* Testes automatizados
-* Containerização completa
+- Arquitetura modular no backend e no frontend
+- Integração com LLM (Google Gemini)
+- Testes automatizados
+- Containerização completa com Docker Compose
