@@ -9,6 +9,7 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+
 def generate_suggestions(titulo: str, tipo: str):
     start_time = time.time()
 
@@ -26,22 +27,22 @@ def generate_suggestions(titulo: str, tipo: str):
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash", 
+            model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
                 response_mime_type="application/json",
             ),
-            contents=prompt
+            contents=prompt,
         )
-        
+
         latency = round(time.time() - start_time, 2)
 
         token_usage = 0
         if response.usage_metadata:
-            token_usage = getattr(response.usage_metadata, 'total_token_count', 0)
+            token_usage = getattr(response.usage_metadata, "total_token_count", 0)
 
         raw_text = response.text.strip()
-        
+
         if raw_text.startswith("```json"):
             raw_text = raw_text.replace("```json", "").replace("```", "").strip()
         elif raw_text.startswith("```"):

@@ -3,3 +3,5 @@ backend/venv/
 **/__pycache__/
 .env
 database.db
+.pytest_cache/
+test.db
