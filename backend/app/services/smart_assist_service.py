@@ -13,7 +13,6 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=API_KEY) if API_KEY else None
 
 
-
 def generate_suggestions(titulo: str, tipo: str):
     start_time = time.time()
 

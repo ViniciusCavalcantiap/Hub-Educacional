@@ -6,7 +6,6 @@ from app import models, schemas
 router = APIRouter(prefix="/resources", tags=["Resources"])
 
 
-
 @router.post("/", response_model=schemas.Resource, status_code=status.HTTP_201_CREATED)
 def create_resource(resource: schemas.ResourceCreate, db: Session = Depends(get_db)):
     db_resource = models.Resource(**resource.model_dump())
