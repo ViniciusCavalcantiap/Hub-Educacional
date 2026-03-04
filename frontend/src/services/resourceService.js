@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/resources";
+const API_URL = `${import.meta.env.VITE_API_URL}/resources`;
 
 export async function getResources() {
   const response = await fetch(API_URL);
