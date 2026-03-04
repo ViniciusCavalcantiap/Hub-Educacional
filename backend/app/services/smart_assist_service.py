@@ -22,7 +22,7 @@ def generate_suggestions(titulo: str, tipo: str):
             "Descrição gerada automaticamente para testes.",
             ["teste", "educacional", "api"],
             0.0,
-            0
+            0,
         )
 
     system_instruction = """
