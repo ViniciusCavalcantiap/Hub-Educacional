@@ -13,10 +13,11 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=API_KEY) if API_KEY else None
 
 
+
 def generate_suggestions(titulo: str, tipo: str):
     start_time = time.time()
 
-    # 🔹 Se não tiver API key (ex: CI ou testes), retorna mock
+    # Se não tiver API key (ex: CI ou testes), retorna mock
     if not client:
         return (
             "Descrição gerada automaticamente para testes.",
