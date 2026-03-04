@@ -1,17 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
+from app.database import get_db
 from app import models, schemas
 
 router = APIRouter(prefix="/resources", tags=["Resources"])
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/", response_model=schemas.Resource, status_code=status.HTTP_201_CREATED)
