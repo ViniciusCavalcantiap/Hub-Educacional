@@ -20,6 +20,7 @@ class Resource(ResourceBase):
     class Config:
         from_attributes = True
 
+
 class SmartAssistRequest(BaseModel):
     titulo: str
     tipo: str
