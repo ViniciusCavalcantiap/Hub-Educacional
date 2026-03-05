@@ -39,6 +39,15 @@ export function ResourceFormModal({
     }));
   };
 
+  const isValidUrl = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   const handleGenerateAI = async () => {
     if (!formData.titulo.trim() || !formData.tipo.trim()) {
       feedback.show("Preencha Título e Tipo antes de gerar com IA.");
@@ -69,6 +78,11 @@ export function ResourceFormModal({
   const handleSubmit = () => {
     if (Object.values(formData).some(field => !field.trim())) {
       feedback.show("É necessário preencher todos os campos.");
+      return;
+    }
+
+    if (!isValidUrl(formData.url)) {
+      feedback.show("Informe um link válido (ex: https://exemplo.com).");
       return;
     }
 
